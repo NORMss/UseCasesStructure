@@ -21,4 +21,21 @@ class SendPayment(
 
         return repo.getTransactionResult(transactionId)
     }
+
+    suspend operator fun invoke(
+        amount: Double,
+        senderId: String,
+        accountNumber: Long,
+    ): Boolean {
+        val transactionId = repo.startTransaction(senderId, accountNumber.toString())
+
+        repo.sendPayment(
+            amount = amount,
+            senderId = senderId,
+            receiverId = accountNumber.toString(),
+            transactionId = transactionId,
+        )
+
+        return repo.getTransactionResult(transactionId)
+    }
 }
